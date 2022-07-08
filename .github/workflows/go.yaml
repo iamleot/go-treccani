@@ -1,0 +1,28 @@
+name: Go CI/CD
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Go CI/CD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+      - name: Check formatting
+        run: |
+          gofmt -l . | awk '{ print } END { exit(NR > 0) }'
+      - name: Get dependencies
+        run: |
+          go get -v -t -d ./...
+      - name: Build
+        run: |
+          go build -v ./...
+      - name: Test
+        run: |
+          go test -v ./...
