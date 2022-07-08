@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mitchellh/go-wordwrap"
 	"github.com/iamleot/go-treccani"
+	"github.com/mitchellh/go-wordwrap"
 )
 
 // PrintDefinition pretty prints a term definition.
