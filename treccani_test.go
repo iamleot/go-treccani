@@ -24,13 +24,33 @@ func TestLookupInexistentTerm(t *testing.T) {
 	}
 }
 
-// TestTerms calls treccani.Terms checking that several definitions are
-// returned.
+// TestTerms calls treccani.Terms checking that one or more definitions
+// are returned.
 func TestTerms(t *testing.T) {
 	term := "birba"
 	definitions := Terms(term)
 	if len(definitions) == 0 {
-		t.Fatalf(`Terms("birba") should return several definitions`)
+		t.Fatalf(`Terms("birba") should return some definitions`)
+	}
+}
+
+// TestTermsMultiple calls treccani.Terms checking that more than one
+// definition is returned.
+func TestTermsMultiple(t *testing.T) {
+	term := "lira"
+	definitions := Terms(term)
+	if len(definitions) <= 1 {
+		t.Fatalf(`Terms("lira") should return several definitions`)
+	}
+}
+
+// TestTermsSingle calls treccani.Terms checking that exactly a single
+// definition is returned.
+func TestTermsSingle(t *testing.T) {
+	term := "ciao"
+	definitions := Terms(term)
+	if len(definitions) != 1 {
+		t.Fatalf(`Terms("ciao") should return a single definition`)
 	}
 }
 
