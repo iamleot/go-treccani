@@ -3,6 +3,7 @@
 AWK = awk
 GO = go
 GOFMT = gofmt
+GOSEC = gosec
 
 all:
 
@@ -25,3 +26,7 @@ depends:
 fmt:
 	@echo "Formatting Go files"
 	@$(GO) fmt ./...
+
+gosec:
+	@echo "Checking code via gosec"
+	@$(GOSEC) ./...
