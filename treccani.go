@@ -27,10 +27,14 @@ func LookupTerm(term string) string {
 		log.Fatal(err)
 	}
 
-	return strings.ReplaceAll(
+	// Delete inline style that would only add noise
+	doc.Find(".term-content").Find("style").Remove()
+
+	return strings.ReplaceAll(strings.ReplaceAll(
 		strings.TrimSpace(
-			doc.Find("div[class=\"text spiega\"]").Text()),
-		"\n", " ")
+			doc.Find(".term-content").Text()),
+		"\n", " "),
+		"   ", " ")
 }
 
 // Terms search all terms in Vocabolario Treccani. Returns a string slice of
