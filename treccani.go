@@ -15,7 +15,7 @@ import (
 // found an empty string is returned, otherwise the definition is returned as
 // text.
 func LookupTerm(term string) string {
-	resp, err := http.Get(fmt.Sprintf("https://www.treccani.it/vocabolario/%s",
+	resp, err := http.Get(fmt.Sprintf("https://www.treccani.it/vocabolario/%s/",
 		url.PathEscape(term)))
 	if err != nil {
 		log.Fatal(err)
