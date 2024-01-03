@@ -14,8 +14,8 @@ import (
 // LookupTerm search a single term on Vocabolario Treccani. If no definition is
 // found an empty string is returned, otherwise the definition is returned as
 // text.
-func LookupTerm(term string) string {
-	resp, err := http.Get(fmt.Sprintf("https://www.treccani.it/vocabolario/%s/",
+func LookupTerm(term string, client *http.Client) string {
+	resp, err := client.Get(fmt.Sprintf("https://www.treccani.it/vocabolario/%s/",
 		url.PathEscape(term)))
 	if err != nil {
 		log.Fatal(err)
@@ -39,14 +39,14 @@ func LookupTerm(term string) string {
 
 // Terms search all terms in Vocabolario Treccani. Returns a string slice of
 // term definitions.
-func Terms(term string) []string {
+func Terms(term string, client *http.Client) []string {
 	var terms []string
 
-	if t := LookupTerm(term); t != "" {
+	if t := LookupTerm(term, client); t != "" {
 		terms = append(terms, t)
 	} else {
 		for i := 1; ; i++ {
-			t = LookupTerm(fmt.Sprintf("%s%d", term, i))
+			t = LookupTerm(fmt.Sprintf("%s%d", term, i), client)
 			if t != "" {
 				terms = append(terms, t)
 			} else {

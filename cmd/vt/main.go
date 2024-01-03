@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/iamleot/go-treccani"
@@ -21,7 +22,7 @@ func main() {
 
 	term := os.Args[1]
 
-	for i, definition := range treccani.Terms(term) {
+	for i, definition := range treccani.Terms(term, http.DefaultClient) {
 		if i > 0 {
 			fmt.Printf("\n")
 		}
