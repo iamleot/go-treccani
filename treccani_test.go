@@ -7,103 +7,81 @@ import (
 	"gopkg.in/dnaeon/go-vcr.v3/recorder"
 )
 
-// TestLookupTerm calls treccani.TestLookup checking that it gets a definition.
 func TestLookupTerm(t *testing.T) {
-	r, err := recorder.New("fixtures/esempio")
-	if err != nil {
-		t.Fatal(err)
+	type testCase struct {
+		term           string
+		expectedRegexp *regexp.Regexp
+		cassette       string
 	}
-	defer r.Stop()
-	client := r.GetDefaultClient()
 
-	term := "esempio"
-	want := regexp.MustCompile(`^\b` + term + `\b`)
-	definition := LookupTerm("esempio", client)
-	if !want.MatchString(definition) {
-		t.Fatalf(`LookupTerm("esempio") = %q want match for %#q`, definition, want)
+	var tests = map[string]testCase{
+		"term with a definition": {
+			term:           "esempio",
+			expectedRegexp: regexp.MustCompile(`^\besempio\b`),
+			cassette:       "fixtures/esempio",
+		},
+		"term without a definition": {
+			term:           "inexistent",
+			expectedRegexp: regexp.MustCompile(`^$`),
+			cassette:       "fixtures/inexistent",
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			r, err := recorder.New(tc.cassette)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer r.Stop()
+			client := r.GetDefaultClient()
+
+			definition := LookupTerm(tc.term, client)
+			if !tc.expectedRegexp.MatchString(definition) {
+				t.Fatalf(`LookupTerm("%s") = %q want match for %#q`, tc.term, definition, tc.expectedRegexp)
+			}
+		})
 	}
 }
 
-// TestLookupInexistentTerm calls treccani.TestLookup checking that it does not
-// get a definition for an inexistent term.
-func TestLookupInexistentTerm(t *testing.T) {
-	r, err := recorder.New("fixtures/inexistent")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer r.Stop()
-	client := r.GetDefaultClient()
-
-	definition := LookupTerm("inexistent", client)
-	if definition != "" {
-		t.Fatalf(`LookupTerm("inexistent") = %q want ""`, definition)
-	}
-}
-
-// TestTerms calls treccani.Terms checking that one or more definitions
-// are returned.
 func TestTerms(t *testing.T) {
-	r, err := recorder.New("fixtures/birba")
-	if err != nil {
-		t.Fatal(err)
+	type testCase struct {
+		term                        string
+		expectedNumberOfDefinitions int
+		cassette                    string
 	}
-	defer r.Stop()
-	client := r.GetDefaultClient()
 
-	term := "birba"
-	definitions := Terms(term, client)
-	if len(definitions) == 0 {
-		t.Fatalf(`Terms("birba") should return some definitions`)
+	var tests = map[string]testCase{
+		"term with 2 definitions": {
+			term:                        "birba",
+			expectedNumberOfDefinitions: 2,
+			cassette:                    "fixtures/birba",
+		},
+		"term with 1 definition": {
+			term:                        "ciao",
+			expectedNumberOfDefinitions: 1,
+			cassette:                    "fixtures/ciao",
+		},
+		"term without a definition": {
+			term:                        "inexistents",
+			expectedNumberOfDefinitions: 0,
+			cassette:                    "fixtures/inexistents",
+		},
 	}
-}
 
-// TestTermsMultiple calls treccani.Terms checking that more than one
-// definition is returned.
-func TestTermsMultiple(t *testing.T) {
-	r, err := recorder.New("fixtures/lira")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer r.Stop()
-	client := r.GetDefaultClient()
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			r, err := recorder.New(tc.cassette)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer r.Stop()
+			client := r.GetDefaultClient()
 
-	term := "lira"
-	definitions := Terms(term, client)
-	if len(definitions) <= 1 {
-		t.Fatalf(`Terms("lira") should return several definitions`)
-	}
-}
-
-// TestTermsSingle calls treccani.Terms checking that exactly a single
-// definition is returned.
-func TestTermsSingle(t *testing.T) {
-	r, err := recorder.New("fixtures/ciao")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer r.Stop()
-	client := r.GetDefaultClient()
-
-	term := "ciao"
-	definitions := Terms(term, client)
-	if len(definitions) != 1 {
-		t.Fatalf(`Terms("ciao") should return a single definition`)
-	}
-}
-
-// TestInexistentTerms calls treccani.Terms checking that for inexistent terms
-// no definitions are returned.
-func TestInexistentTerms(t *testing.T) {
-	r, err := recorder.New("fixtures/inexistents")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer r.Stop()
-	client := r.GetDefaultClient()
-
-	term := "inexistents"
-	definitions := Terms(term, client)
-	if len(definitions) != 0 {
-		t.Fatalf(`Terms("inexistent") should return no definitions`)
+			definitions := Terms(tc.term, client)
+			if len(definitions) != tc.expectedNumberOfDefinitions {
+				t.Fatalf(`Terms("%s") should return %d definitions but returned %d definitions`, tc.term, tc.expectedNumberOfDefinitions, len(definitions))
+			}
+		})
 	}
 }
