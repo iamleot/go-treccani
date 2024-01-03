@@ -38,7 +38,7 @@ func TestLookupTerm(t *testing.T) {
 
 			definition := LookupTerm(tc.term, client)
 			if !tc.expectedRegexp.MatchString(definition) {
-				t.Fatalf(`LookupTerm("%s") = %q want match for %#q`, tc.term, definition, tc.expectedRegexp)
+				t.Fatalf(`LookupTerm("%s", ...) = %q want match for %#q`, tc.term, definition, tc.expectedRegexp)
 			}
 		})
 	}
@@ -80,7 +80,7 @@ func TestTerms(t *testing.T) {
 
 			definitions := Terms(tc.term, client)
 			if len(definitions) != tc.expectedNumberOfDefinitions {
-				t.Fatalf(`Terms("%s") should return %d definitions but returned %d definitions`, tc.term, tc.expectedNumberOfDefinitions, len(definitions))
+				t.Fatalf(`Terms("%s", ...) should return %d definitions but returned %d definitions`, tc.term, tc.expectedNumberOfDefinitions, len(definitions))
 			}
 		})
 	}
