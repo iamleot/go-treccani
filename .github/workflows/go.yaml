@@ -1,6 +1,6 @@
 name: Go CI/CD
 
-on:
+'on':
   push:
 
 env:
