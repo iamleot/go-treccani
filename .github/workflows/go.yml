@@ -2,6 +2,9 @@ name: Go CI/CD
 
 'on':
   push:
+    branches:
+      - main
+  pull_request:
   schedule:
     - cron: '22 3 * * 3'
 
