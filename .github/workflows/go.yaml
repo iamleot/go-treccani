@@ -2,6 +2,8 @@ name: Go CI/CD
 
 'on':
   push:
+  schedule:
+    - cron: '22 3 * * 3'
 
 env:
   GOSEC_VERSION: "2.16.0"
