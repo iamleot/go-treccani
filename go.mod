@@ -1,6 +1,7 @@
 module github.com/iamleot/go-treccani
 
-go 1.23
+go 1.24
+
 require (
 	github.com/PuerkitoBio/goquery v1.10.3
 	github.com/mitchellh/go-wordwrap v1.0.1
