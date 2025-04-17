@@ -9,7 +9,7 @@ name: Go CI/CD
     - cron: '22 3 * * 3'
 
 env:
-  GOSEC_VERSION: "2.16.0"
+  GOSEC_VERSION: "2.22.3"
 
 jobs:
   build:
