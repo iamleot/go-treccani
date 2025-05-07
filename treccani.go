@@ -30,6 +30,9 @@ func LookupTerm(term string, client *http.Client) string {
 	// Delete inline style that would only add noise
 	doc.Find(".term-content").Find("style").Remove()
 
+	// Delete initial header
+	doc.Find(`span:contains('DAL VOCABOLARIO')`).Remove()
+
 	// Delete copyright note that would only add noise
 	doc.Find(`p:contains(` +
 		`'© Istituto della Enciclopedia Italiana ` +
