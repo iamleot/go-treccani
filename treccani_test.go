@@ -44,6 +44,43 @@ func TestLookupTerm(t *testing.T) {
 	}
 }
 
+func TestLookupTermNoNoise(t *testing.T) {
+	type testCase struct {
+		term             string
+		unexpectedRegexp *regexp.Regexp
+		cassette         string
+	}
+
+	var tests = map[string]testCase{
+		"no initial header present": {
+			term:             "esempio",
+			unexpectedRegexp: regexp.MustCompile(`(?i)DAL VOCABOLARIO`),
+			cassette:         "fixtures/esempio",
+		},
+		"no copyright note": {
+			term:             "esempio",
+			unexpectedRegexp: regexp.MustCompile(`Riproduzione riservata`),
+			cassette:         "fixtures/esempio",
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			r, err := recorder.New(tc.cassette)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer r.Stop()
+			client := r.GetDefaultClient()
+
+			definition := LookupTerm(tc.term, client)
+			if tc.unexpectedRegexp.MatchString(definition) {
+				t.Fatalf(`LookupTerm("%s", ...) = %q should not match for %#q`, tc.term, definition, tc.unexpectedRegexp)
+			}
+		})
+	}
+}
+
 func TestTerms(t *testing.T) {
 	type testCase struct {
 		term                        string
