@@ -35,7 +35,7 @@ func LookupTerm(term string, client *http.Client) string {
 
 	// Delete copyright note that would only add noise
 	doc.Find(`p:contains(` +
-		`'© Istituto della Enciclopedia Italiana ` +
+		`'©  Istituto della Enciclopedia Italiana ` +
 		`fondata da Giovanni Treccani - ` +
 		`Riproduzione riservata')`).Remove()
 
