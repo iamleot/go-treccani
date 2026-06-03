@@ -11,12 +11,21 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+const userAgent = "Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101 Firefox/140.0"
+
 // LookupTerm search a single term on Vocabolario Treccani. If no definition is
 // found an empty string is returned, otherwise the definition is returned as
 // text.
 func LookupTerm(term string, client *http.Client) string {
-	resp, err := client.Get(fmt.Sprintf("https://www.treccani.it/vocabolario/%s/",
-		url.PathEscape(term)))
+	req, err := http.NewRequest("GET",
+		fmt.Sprintf("https://www.treccani.it/vocabolario/%s/",
+			url.PathEscape(term)), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req.Header.Set("User-Agent", userAgent)
+	resp, err := client.Do(req)
 	if err != nil {
 		log.Fatal(err)
 	}
