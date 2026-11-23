@@ -1,15 +1,15 @@
 module github.com/iamleot/go-treccani
 
-go 1.26
+go 1.26.0
 
 require (
-	github.com/PuerkitoBio/goquery v1.12.0
+	github.com/PuerkitoBio/goquery v1.14.0
 	github.com/mitchellh/go-wordwrap v1.0.1
 	gopkg.in/dnaeon/go-vcr.v3 v3.2.1
 )
 
 require (
-	github.com/andybalholm/cascadia v1.3.3 // indirect
-	golang.org/x/net v0.55.0 // indirect
+	github.com/andybalholm/cascadia v1.3.5 // indirect
+	golang.org/x/net v0.62.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
